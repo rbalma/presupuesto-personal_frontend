@@ -28,7 +28,7 @@ export default function Form() {
 
 
     const fetchIngresos = () => {
-        fetch('http://localhost:3001/ingresos')
+        fetch('http://localhost:3001/api/ingresos')
         .then(res => res.json())
         .then(data => {
             setIngresos(data.ingreso);           
@@ -37,7 +37,7 @@ export default function Form() {
 
 
     const fetchEgresos = () => {
-        fetch('http://localhost:3001/egresos')
+        fetch('http://localhost:3001/api/egresos')
         .then(res => res.json())
         .then(data => {
             setEgresos(data.egreso);           
@@ -46,7 +46,7 @@ export default function Form() {
 
    const addOperation = (e) => {
         if(inputs.id){
-            fetch( `http://localhost:3001/editar/${inputs.id}`,{
+            fetch( `http://localhost:3001/api/editar/${inputs.id}`,{
                 method: 'PUT',
                 body: JSON.stringify(inputs),
                 headers: {
@@ -76,7 +76,7 @@ export default function Form() {
         })
 
         } else {
-            fetch('http://localhost:3001/', {
+            fetch('http://localhost:3001/api', {
                 method: 'POST',
                 body: JSON.stringify(inputs),
                 headers: {
@@ -117,7 +117,7 @@ export default function Form() {
 
 
     const fetchOperations = () => {
-        fetch('http://localhost:3001/')
+        fetch('http://localhost:3001/api')
         .then(res => res.json())
         .then(data => {
             setOperations(data);
@@ -126,7 +126,7 @@ export default function Form() {
     }
 
     const deleteOperation = (id) => {
-        fetch( `http://localhost:3001/delete/${id}`,{
+        fetch( `http://localhost:3001/api/delete/${id}`,{
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -147,7 +147,7 @@ export default function Form() {
     }
 
     const editOperation = (id) => {
-        fetch( `http://localhost:3001/${id}`)
+        fetch( `http://localhost:3001/api/${id}`)
         .then(res => res.json())
         .then(data => {
             
