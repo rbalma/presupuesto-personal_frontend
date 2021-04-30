@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { checkPresupuesto } from "../../helpers";
 import { CRMContext } from "../../context/CRMContext";
+import moment from 'moment';
 
 export default function List(props) {
   const [ingresos, setIngresos] = useState(0);
@@ -100,7 +101,7 @@ export default function List(props) {
             {operations.map((operacion) => (
               <tr key={operacion.id}>
                 <td>{operacion.name}</td>
-                <td>{operacion.date}</td>
+                <td>{moment(operacion.date).format("DD")}/{moment(operacion.date).format("MM")}/{moment(operacion.date).format("YYYY")}</td>
                 <td>{operacion.price}</td>
                 <td>{operacion.type}</td>
                 <td>
