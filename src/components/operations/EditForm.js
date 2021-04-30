@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { updateOperationApi, getOperationsByIdApi } from "../../api/operations";
 import { Link } from "react-router-dom";
+import { CRMContext } from "../../context/CRMContext";
 
 import Swal from "sweetalert2";
 
 export default function EditForm(props) {
   const { history } = props;
   const { id } = props.match.params;
+
+  // eslint-disable-next-line no-unused-vars
+  const [auth, setAuth] = useContext(CRMContext);
 
   const [operation, setOperation] = useState({
     name: "",
@@ -19,14 +23,14 @@ export default function EditForm(props) {
   const { name, price, date } = operation;
 
   useEffect(() => {
-    getOperationsByIdApi(id).then((data) => {
+    getOperationsByIdApi(auth.token, id).then((data) => {
       setOperation({
         name: data.name,
         price: data.price,
         date: data.date,
       });
     });
-  }, [id]);
+  }, [auth.token, id]);
 
   const editOperation = (e) => {
     e.preventDefault();
@@ -38,7 +42,7 @@ export default function EditForm(props) {
 
     setError(false);
 
-    updateOperationApi(operation, id).then((data) => {
+    updateOperationApi(auth.token, operation, id).then((data) => {
       setOperation({
         name: "",
         price: "",

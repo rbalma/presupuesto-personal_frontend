@@ -23,14 +23,14 @@ export function getOperationsApi(token, userId) {
 }
 
 
-export function newOperationApi(operation) {
+export function newOperationApi(token, operation) {
     const url = `${basePath}/operations`;
     
     const params = {
       method: "POST",
       body: JSON.stringify(operation),
       headers: {
-        //Authorization: token,
+        Authorization: token,
         'Content-Type': 'application/json'
       }
     };
@@ -48,14 +48,14 @@ export function newOperationApi(operation) {
 }
 
 
-export function updateOperationApi(operation, operationId){
+export function updateOperationApi(token, operation, operationId){
     const url = `${basePath}/operations/update/${operationId}`;
 
     const params = {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          //Authorization: token
+          Authorization: token
         },
         body: JSON.stringify(operation)
       };
@@ -73,14 +73,14 @@ export function updateOperationApi(operation, operationId){
 
 }
 
-export function deleteOperationApi(operationId) {
+export function deleteOperationApi(token, operationId) {
     const url = `${basePath}/operations/delete/${operationId}`;
   
     const params = {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        //Authorization: token
+        Authorization: token
       }
     };
   
@@ -97,10 +97,14 @@ export function deleteOperationApi(operationId) {
 }
 
 
-export function getOperationsByIdApi(operationId) {
+export function getOperationsByIdApi(token, operationId) {
     const url = `${basePath}/operations/get/${operationId}`
     const params = {
-      method: "GET"
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token
+      }
     };
   
     return fetch(url, params)
@@ -116,14 +120,14 @@ export function getOperationsByIdApi(operationId) {
 }
 
 
-export function getUsersPricesApi(type, userId) {
+export function getUsersPricesApi(token, type, userId) {
     const url = `${basePath}/operations/prices/${userId}?type=${type}`;
   
     const params = {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        //Authorization: token
+        Authorization: token
       }
     };
   

@@ -37,7 +37,7 @@ export default function AddForm(props) {
 
     operation.userId = auth.id;
 
-    newOperationApi(operation)
+    newOperationApi(auth.token, operation)
       .then((data) => {
         setOperation({
           name: "",

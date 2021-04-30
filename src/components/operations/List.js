@@ -19,10 +19,10 @@ export default function List(props) {
   useEffect(() => {
     if (auth.token !== "") {
       const userId = auth.id;
-      getUsersPricesApi("Ingreso", userId).then((data) => {
+      getUsersPricesApi(auth.token, "Ingreso", userId).then((data) => {
         setIngresos(data);
       });
-      getUsersPricesApi("Egreso", userId).then((data) => {
+      getUsersPricesApi(auth.token, "Egreso", userId).then((data) => {
         setEgresos(data);
       });
 
@@ -58,7 +58,7 @@ export default function List(props) {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteOperationApi(id).then((data) => {
+        deleteOperationApi(auth.token, id).then((data) => {
           Swal.fire("Éxito!", "Se eliminó la operación", "success");
         });
         setReload(true);
