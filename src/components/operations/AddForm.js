@@ -1,128 +1,121 @@
-import React, { useState} from 'react';
-import { updateOperationApi, newOperationApi } from '../../api/operations';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from "react";
+import { newOperationApi } from "../../api/operations";
+import { Link } from "react-router-dom";
+import { CRMContext } from "../../context/CRMContext";
 
-import DatePicker from "react-datepicker";
-
-import "react-datepicker/dist/react-datepicker.css";
-
-import Swal from 'sweetalert2';
-
+import Swal from "sweetalert2";
 
 export default function AddForm(props) {
+  const { history } = props;
+  // eslint-disable-next-line no-unused-vars
+  const [auth, setAuth] = useContext(CRMContext);
 
-    const { history } = props;
+  const [operation, setOperation] = useState({
+    name: "",
+    price: "",
+    date: "",
+    type: "",
+    userId: "",
+  });
 
-    const [startDate, setStartDate] = useState(new Date());
+  const [error, setError] = useState(false);
 
-    const [inputs, setInputs] = useState({
-        name: "",
-        price: "",
-        date: startDate,
-        type: ""
-      });
+  const { name, price, date, type } = operation;
 
+  const addOperation = (e) => {
+    e.preventDefault();
 
-   const addOperation = (e) => {
-
-        if(inputs.id){
-            updateOperationApi(inputs, inputs.id)
-            .then(data => {
-                setInputs(
-                    {
-                        name: "",
-                        price: "",
-                        date: startDate,
-                        type: "",
-                        id: ""
-                      }
-            )
-
-            Swal.fire(
-                'Éxito!',
-                'Se editó la operación',
-                'success'
-              );
-              history.push('/');
-        })
-
-        } else {
-          newOperationApi(inputs)
-            .then(data => {
-            setInputs(
-             {
-                 name: "",
-                 price: "",
-                 date: startDate,
-                 type: "",
-                 id: ""
-               }
-            )
-
-            Swal.fire(
-                'Éxito!',
-                'Se agregó la operación',
-                'success'
-              )
-              history.push('/');
-             })
-            .catch(err => 
-                Swal.fire({
-                type: 'error',
-                title: 'Hubo un error',
-                text: err
-                }));
-        }
-       e.preventDefault();
-       
+    if (
+      name.trim() === "" || price < 1 || isNaN(price) || 
+      date.trim() === "" || type.trim() === ""
+    ) {
+      setError(true);
+      return;
     }
 
-    return (
-        
-        <div className="container">
-          <div className="row mt-4">
+    setError(false);
 
-            <div className="col-md-6 col-xs-12">
-              <div className="card">
-                  <div className="card-body">
-                    <form onSubmit={addOperation}>
-                    <div className="form-group">
-                      <label>Concepto</label>
-                      <input type="text" name="name" 
-                      onChange={(e) => setInputs({ ...inputs, name: e.target.value })} className="form-control" placeholder="" value={inputs.name} />
-                    </div>
-                    <div className="form-group">
-                      <label>Monto</label>
-                      <input type="number" name="price"
-                       onChange={(e) => setInputs({ ...inputs, price: e.target.value })}
-                      className="form-control" placeholder="" value={inputs.price} />
-                    </div>
-                    <div className="form-group">
-                      <DatePicker selected={startDate} name="date" onChange={date => {setStartDate(date);
-                      setInputs({ ...inputs, date: date })
-                      }} value={inputs.date}/>
-                    </div>
-                    <div className="form-group">
-                      <label>Tipo</label>
-                      <select className="form-control"
-                      onChange={(e) => setInputs({ ...inputs, type: e.target.value })}
-                       name="type" value={inputs.type}>
-                              <option>Seleccione un tipo</option>
-                              <option value="Egreso">Egreso</option>
-                              <option value="Ingreso">Ingreso</option>
-                      </select>
-                    </div>
-                      <button type="submit" className="btn btn-primary mr-4">Confirmar</button>
-                      <Link to={"/"} className="btn btn-secondary ">Cancelar</Link>
-                    </form>
-                  </div>
-              </div>
-            </div>
+    operation.userId = auth.id;
 
+    newOperationApi(operation)
+      .then((data) => {
+        setOperation({
+          name: "",
+          price: "",
+          date: "",
+          type: "",
+          userId: "",
+        });
 
+        Swal.fire("Éxito!", "Se agregó la operación", "success");
+        history.push("/");
+      })
+      .catch((err) =>
+        Swal.fire({
+          icon: "error",
+          title: "Hubo un Error",
+          text: err,
+        })
+      );
+  };
 
-          </div>
-        </div>
-
-    )
+  return (
+    <form onSubmit={addOperation}>
+      {error ? (
+        <p className="alerta-error">Todos los campos son obligatorios</p>
+      ) : null}
+      <legend>Registra una operación</legend>
+      <div className="campo">
+        <label>Concepto</label>
+        <input
+          type="text"
+          name="name"
+          onChange={(e) => setOperation({ ...operation, name: e.target.value })}
+          value={name}
+        />
+      </div>
+      <div className="campo">
+        <label>Monto</label>
+        <input
+          type="number"
+          name="price"
+          onChange={(e) =>
+            setOperation({ ...operation, price: e.target.value })
+          }
+          value={price}
+        />
+      </div>
+      <div className="campo">
+        <label>Fecha</label>
+        <input
+          type="date"
+          name="date"
+          onChange={(e) => setOperation({ ...operation, date: e.target.value })}
+          value={date}
+        />
+      </div>
+      <div className="campo">
+        <label>Tipo</label>
+        <select
+          onChange={(e) => setOperation({ ...operation, type: e.target.value })}
+          name="type"
+          value={type}
+        >
+          <option value="" disabled>
+            Seleccione un tipo
+          </option>
+          <option value="Egreso">Egreso</option>
+          <option value="Ingreso">Ingreso</option>
+        </select>
+      </div>
+      <div className="text-center">
+        <button type="submit" className="btn btn-primary mr-4">
+          Confirmar
+        </button>
+        <Link to={"/"} className="btn btn-secondary ">
+          Cancelar
+        </Link>
+      </div>
+    </form>
+  );
 }

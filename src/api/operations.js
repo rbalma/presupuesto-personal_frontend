@@ -1,22 +1,20 @@
 import { basePath } from './config';
 
-export function getOperationsApi() {
+export function getOperationsApi(token, userId) {
 
-    const url = `${basePath}/operations`;
+    const url = `${basePath}/operations/${userId}`;
   
     const params = {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+         Authorization: token,
       }
     };
   
     return fetch(url, params)
       .then(response => {
         return response.json();
-      })
-      .then(result => {
-        return result;
       })
       .catch(err => {
         return err.message;
@@ -118,8 +116,8 @@ export function getOperationsByIdApi(operationId) {
 }
 
 
-export function getUsersPricesApi(type) {
-    const url = `${basePath}/operations/prices?type=${type}`;
+export function getUsersPricesApi(type, userId) {
+    const url = `${basePath}/operations/prices/${userId}?type=${type}`;
   
     const params = {
       method: "GET",
