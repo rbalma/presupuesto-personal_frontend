@@ -7,7 +7,6 @@ export function newUserApi(user) {
       method: "POST",
       body: JSON.stringify(user),
       headers: {
-        //Authorization: token,
         'Content-Type': 'application/json'
       }
     };
@@ -15,6 +14,9 @@ export function newUserApi(user) {
     return fetch(url, params)
       .then(response => {
         return response.json();
+      })
+      .then(result => {
+        return result;
       })
       .catch(err => {
         return err.message;
@@ -34,6 +36,9 @@ export function loginApi(user) {
     return fetch(url, params)
       .then(response => {
         return response.json();
+      })
+      .then(result => {
+        return result;
       })
       .catch(err => {
         return err.message;

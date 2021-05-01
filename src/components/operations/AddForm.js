@@ -22,9 +22,8 @@ export default function AddForm(props) {
 
   const { name, price, date, type } = operation;
 
-  const addOperation = (e) => {
+  const addOperation = async(e) => {
     e.preventDefault();
-
     if (
       name.trim() === "" || price < 1 || isNaN(price) || 
       date.trim() === "" || type.trim() === ""
@@ -32,31 +31,20 @@ export default function AddForm(props) {
       setError(true);
       return;
     }
-
     setError(false);
-
     operation.userId = auth.id;
-
-    newOperationApi(auth.token, operation)
-      .then((data) => {
-        setOperation({
-          name: "",
-          price: "",
-          date: "",
-          type: "",
-          userId: "",
-        });
-
-        Swal.fire("Éxito!", "Se agregó la operación", "success");
-        history.push("/");
-      })
-      .catch((err) =>
-        Swal.fire({
-          icon: "error",
-          title: "Hubo un Error",
-          text: err,
-        })
-      );
+    const result = await newOperationApi(auth.token, operation);
+    if (result.message) {
+      Swal.fire({
+        icon: "error",
+        title: "Hubo un Error",
+        text: result.message,
+      });
+    } else {
+      setOperation({ name: "", price: "", date: "", type: "", userId: "" });
+      Swal.fire("Éxito!", "Se agregó la operación", "success");
+      history.push("/");
+    }
   };
 
   return (

@@ -1,7 +1,7 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css");
 
 body {
-  background: #000428; /* fallback for old browsers */
+  background: #000428; 
   background: -webkit-linear-gradient(to right, #004e92, #000428);
   background: linear-gradient(to right, #004e92, #000428);
   margin: 0;
@@ -60,7 +60,6 @@ body {
   text-align: center;
 }
 
-/** Formularios **/
 form {
   width: 95%;
   max-width: 600px;
@@ -97,11 +96,4 @@ input:not([type="submit"]) {
   padding: 0.5rem;
   flex: 1;
   border: 1px solid #464343;
-}
-
-.text-type {
-  font-weight: bold;
-  font-size: 1rem;
-  font-family: "Raleway", sans-serif;
-  flex: 0 0 100px;
 }

@@ -32,26 +32,25 @@ export default function EditForm(props) {
     });
   }, [auth.token, id]);
 
-  const editOperation = (e) => {
+  const editOperation = async(e) => {
     e.preventDefault();
-
     if (name.trim() === "" || price < 1 || isNaN(price) || date.trim() === "") {
       setError(true);
       return;
     }
-
     setError(false);
-
-    updateOperationApi(auth.token, operation, id).then((data) => {
-      setOperation({
-        name: "",
-        price: "",
-        date: "",
+    const result = await updateOperationApi(auth.token, operation, id);
+    if (result.message) {
+      Swal.fire({
+        icon: "error",
+        title: "Hubo un Error",
+        text: result.message,
       });
-
+    } else {
+      setOperation({ name: "", price: "", date: "" });
       Swal.fire("Éxito!", "Se editó la operación", "success");
       history.push("/");
-    });
+    }
   };
 
   return (

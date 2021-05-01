@@ -1,28 +1,5 @@
 import { basePath } from './config';
 
-export function getOperationsApi(token, userId) {
-
-    const url = `${basePath}/operations/${userId}`;
-  
-    const params = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-         Authorization: token,
-      }
-    };
-  
-    return fetch(url, params)
-      .then(response => {
-        return response.json();
-      })
-      .catch(err => {
-        return err.message;
-      });
-    
-}
-
-
 export function newOperationApi(token, operation) {
     const url = `${basePath}/operations`;
     
@@ -40,7 +17,7 @@ export function newOperationApi(token, operation) {
         return response.json();
       })
       .then(result => {
-        return result.message;
+        return result;
       })
       .catch(err => {
         return err.message;
@@ -89,7 +66,7 @@ export function deleteOperationApi(token, operationId) {
         return response.json();
       })
       .then(result => {
-        return result.message;
+        return result;
       })
       .catch(err => {
         return err.message;
@@ -144,14 +121,14 @@ export function getUsersPricesApi(token, type, userId) {
   }
 
 
-export function pagingfilteringsortingApi(type, userId, page, size) {
-    const url = `${basePath}/operations/pagefiltersort/${userId}?page=${page}&size=${size}&type=${type}`;
+export function getOperationsApi(token, type, userId) {
+    const url = `${basePath}/operations/${userId}?type=${type}`;
   
     const params = {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        //Authorization: token
+        Authorization: token
       }
     };
   

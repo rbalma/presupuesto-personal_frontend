@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
-import { getUsersPricesApi, deleteOperationApi, pagingfilteringsortingApi } from "../../api/operations";
+import { getUsersPricesApi, deleteOperationApi, getOperationsApi } from "../../api/operations";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { checkPresupuesto } from "../../helpers";
 import { CRMContext } from "../../context/CRMContext";
-import moment from 'moment';
+import moment from "moment";
 
 export default function List(props) {
   const [ingresos, setIngresos] = useState(0);
   const [egresos, setEgresos] = useState(0);
   const [operations, setOperations] = useState([]);
   const [reload, setReload] = useState(false);
-  const [type, setType] = useState('');
+  const [type, setType] = useState("");
 
   // eslint-disable-next-line no-unused-vars
   const [auth, setAuth] = useContext(CRMContext);
@@ -27,25 +27,18 @@ export default function List(props) {
       getUsersPricesApi(auth.token, "Egreso", userId).then((data) => {
         setEgresos(data);
       });
-
-      pagingfilteringsortingApi(type, userId, 0, 10)
-      .then(data => {
-        setOperations(data.operations);
-      })
-        .catch((error) => {
-          props.history.push("/login");
-        });
-
+      getOperationsApi(auth.token, type, userId).then((data) => {
+        setOperations(data);
+      });
       setReload(false);
     } else {
       props.history.push("/login");
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reload]);
 
   if (!auth.auth) {
-    props.history.push("/");
+    props.history.push("/login");
   }
 
   const deleteOperation = (id) => {
@@ -69,12 +62,9 @@ export default function List(props) {
   };
 
   const reloading = (type) => {
-
     setType(type);
-
     setReload(true);
-  }
-
+  };
 
   return (
     <div className="col-md-12 col-xs-12 mt-2 text-center">
@@ -82,28 +72,25 @@ export default function List(props) {
         <h4>Balance Actual: $ {presupuesto}</h4>
       </div>
       <div className="row ">
-      
-        <div className="col-md-2 d-flex text-left">
-        <h5 className="text-white mr-2">Tipo</h5>
-        <select
-          onChange={e => reloading(e.target.value)}
-          name="type"
-          className="custom-select custom-select-sm"
-        >
-          <option value="">Todos</option>
-          <option value="Egreso">Egreso</option>
-          <option value="Ingreso">Ingreso</option>
-        </select>
-      </div>
-
-      <div className="col-md-10 text-right ">
-        <Link to={"/addForm"} className="btn btn-primary">
-          <i className="bi bi-plus-circle"></i> Agregar Operación
-        </Link>
+        <div className="col-md-2 mb-2 d-flex text-left">
+          <h5 className="text-white mr-2">Tipo</h5>
+          <select
+            onChange={(e) => reloading(e.target.value)}
+            name="type"
+            className="custom-select custom-select-sm"
+          >
+            <option value="">Todos</option>
+            <option value="Egreso">Egreso</option>
+            <option value="Ingreso">Ingreso</option>
+          </select>
         </div>
-      
+
+        <div className="col-md-10 text-right ">
+          <Link to={"/addForm"} className="btn btn-primary">
+            <i className="bi bi-plus-circle"></i> Agregar Operación
+          </Link>
+        </div>
       </div>
-      
 
       <div className="table-responsive-sm">
         <table className="table table-striped table-dark table-bordered mt-4">
@@ -128,7 +115,11 @@ export default function List(props) {
             {operations.map((operacion) => (
               <tr key={operacion.id}>
                 <td>{operacion.name}</td>
-                <td>{moment(operacion.date).format("DD")}/{moment(operacion.date).format("MM")}/{moment(operacion.date).format("YYYY")}</td>
+                <td>
+                  {moment(operacion.date).format("DD")}/
+                  {moment(operacion.date).format("MM")}/
+                  {moment(operacion.date).format("YYYY")}
+                </td>
                 <td>{operacion.price}</td>
                 <td>{operacion.type}</td>
                 <td>
