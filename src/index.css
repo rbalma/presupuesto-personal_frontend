@@ -98,3 +98,10 @@ input:not([type="submit"]) {
   flex: 1;
   border: 1px solid #464343;
 }
+
+.text-type {
+  font-weight: bold;
+  font-size: 1rem;
+  font-family: "Raleway", sans-serif;
+  flex: 0 0 100px;
+}

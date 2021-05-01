@@ -142,3 +142,27 @@ export function getUsersPricesApi(token, type, userId) {
         return err.message;
       });
   }
+
+
+export function pagingfilteringsortingApi(type, userId, page, size) {
+    const url = `${basePath}/operations/pagefiltersort/${userId}?page=${page}&size=${size}&type=${type}`;
+  
+    const params = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        //Authorization: token
+      }
+    };
+  
+    return fetch(url, params)
+      .then(response => {
+        return response.json();
+      })
+      .then(result => {
+        return result;
+      })
+      .catch(err => {
+        return err.message;
+      });
+  }
